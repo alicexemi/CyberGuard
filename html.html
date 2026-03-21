@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Платформа Развития | CyberGuard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+  <div class="holographic-bg"></div>
+
+  <nav role="navigation" aria-label="Основная навигация">
+    <ul>
+      <li><a href="#game-section">Учение с увлечением</a></li>
+      <li><a href="#password-checker">Проверка пароля</a></li>
+      <li><a href="#password-generator">Генератор паролей</a></li>
+      <li><a href="#link-checker">Проверка ссылок</a></li>
+      <li><a href="#memo-section">Предупрежден – значит вооружен</a></li>
+      <li><a href="#scammer-section">Анти-Мошенник</a></li>
+      <li style="margin-left: auto;">
+        <button id="theme-toggle" class="btn" aria-label="Переключить темную/светлую тему" style="padding: 8px 15px; border-radius: 50px; width: auto; min-width: auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(5px);">
+          <span class="icon" id="theme-icon">🌙</span>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <header role="banner">
+    <h1>Платформа Развития</h1>
+    <p>Твой щит в цифровом мире. Обучение, защита и безопасность.</p>
+  </header>
+
+  <section id="game-section" aria-labelledby="game-title">
+    <div class="section-title-wrapper">
+      <h2 id="game-title">Учение с увлечением</h2>
+    </div>
+    <p style="text-align: center; color: var(--text-muted);">Пройдите тест по кибербезопасности и получите персональный сертификат</p>
+
+    <div id="cyber-test" class="game-container">
+      <div class="game-progress" id="test-progress" aria-label="Прогресс теста"></div>
+      <div class="test-header">
+        <h3 id="question-number">Вопрос 1 из 10</h3>
+      </div>
+      <div class="question-container">
+        <p id="question-text" class="question-text">Загрузка вопросов...</p>
+      </div>
+      <div class="answers-container" id="answers-container"></div>
+      <div class="test-controls">
+        <button id="prev-btn" class="btn btn-prev" type="button" disabled>Назад</button>
+        <button id="next-btn" class="btn btn-next" type="button">Далее</button>
+        <button id="submit-btn" class="btn btn-submit" type="button" style="display: none;">Завершить тест</button>
+      </div>
+    </div>
+
+    <div id="results-page" class="game-container" style="display: none;">
+      <h3 class="results-title">Ваши результаты</h3>
+      <div class="results-summary">
+        <div class="results-score">
+          <h4>Ваш результат:</h4>
+          <div class="score-circle">
+            <span id="score-percentage">0%</span>
+          </div>
+          <p id="score-description">Начальный уровень</p>
+        </div>
+        <div class="results-details">
+          <h4>Детали:</h4>
+          <p>Правильных ответов: <span id="correct-count">0</span> из <span id="total-questions">10</span></p>
+          <div id="results-breakdown"></div>
+        </div>
+      </div>
+
+      <div class="certificate-section">
+        <h4>Получите персональный сертификат</h4>
+        <p>Введите ваше имя и фамилию для получения официального сертификата о прохождении теста по кибербезопасности.</p>
+        <div class="certificate-form">
+          <div class="form-group">
+            <label for="user-name" class="sr-only">Имя</label>
+            <input type="text" id="user-name" placeholder="Ваше имя" required>
+          </div>
+          <div class="form-group">
+            <label for="user-surname" class="sr-only">Фамилия</label>
+            <input type="text" id="user-surname" placeholder="Ваша фамилия" required>
+          </div>
+          <div class="form-group">
+            <label for="certificate-style" class="sr-only">Стиль сертификата</label>
+            <div class="certificate-styles">
+              <div class="certificate-style-option classic active" data-style="classic">
+                <div class="style-preview"></div>
+                <div class="style-name">Классика</div>
+              </div>
+              <div class="certificate-style-option tech" data-style="tech">
+                <div class="style-preview"></div>
+                <div class="style-name">Техно</div>
+              </div>
+              <div class="certificate-style-option green" data-style="green">
+                <div class="style-preview"></div>
+                <div class="style-name">Зеленый</div>
+              </div>
+              <div class="certificate-style-option purple" data-style="purple">
+                <div class="style-preview"></div>
+                <div class="style-name">Фиолетовый</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="generate-certificate" class="btn btn-generate" type="button">
+          <span class="icon" aria-hidden="true">📜</span> Сгенерировать сертификат
+        </button>
+      </div>
+
+      <div id="certificate-preview" class="certificate-preview" style="display: none;">
+        <h4>Предварительный просмотр сертификата</h4>
+        <div class="certificate-template classic" id="certificate-template">
+          <div class="certificate-border">
+            <div class="certificate-content">
+              <h2>СЕРТИФИКАТ</h2>
+              <p class="certificate-subtitle">о прохождении курса по кибербезопасности</p>
+              <div class="certificate-body">
+                <p>Настоящий сертификат подтверждает, что</p>
+                <h3 id="cert-name">Иван Иванов</h3>
+                <p>успешно прошел тест по кибербезопасности на платформе CyberGuard</p>
+                <div class="certificate-details">
+                  <p>Результат: <span id="cert-score">85%</span></p>
+                  <p>Уровень знаний: <span id="cert-level">Продвинутый</span></p>
+                  <p>Дата выдачи: <span id="cert-date">19 февраля 2026 г.</span></p>
+                </div>
+                <div class="certificate-signature">
+                  <div class="signature-area">
+                    <p>Подпись инструктора</p>
+                    <div class="signature-line"></div>
+                  </div>
+                  <div class="seal-area">
+                    <div class="seal">
+                      <span>CyberGuard</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="download-certificate" class="btn btn-download" type="button">
+          <span class="icon" aria-hidden="true">⬇️</span> Скачать сертификат
+        </button>
+      </div>
+    </div>
+
+    <button id="restart-test" class="btn btn-restart" type="button" style="display: none; margin-top: 20px;">
+      <span class="icon" aria-hidden="true">🔄</span> Пройти тест заново
+    </button>
+  </section>
+
+  <section id="password-checker" aria-labelledby="password-title">
+    <div class="section-title-wrapper">
+      <h2 id="password-title">Анализатор паролей</h2>
+    </div>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem;">Проверьте надежность вашего пароля</p>
+    <div class="password-checker">
+      <label for="password-input" class="sr-only">Введите пароль для проверки</label>
+      <div class="password-input-container">
+        <input type="password" id="password-input" placeholder="Введите пароль" maxlength="64" autocomplete="off" aria-describedby="password-feedback">
+        <button id="toggle-password" type="button" class="input-icon" aria-label="Показать/скрыть пароль">
+          <span class="icon" aria-hidden="true">👁️</span>
+        </button>
+      </div>
+      <div class="password-strength" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Надежность пароля">
+        <div id="password-strength-fill"></div>
+      </div>
+      <div id="password-feedback" class="password-feedback" aria-live="polite"></div>
+      <div class="password-requirements" aria-label="Требования к паролю">
+        <div class="requirement" id="length-req">Минимум 12 символов</div>
+        <div class="requirement" id="upper-req">Заглавные буквы</div>
+        <div class="requirement" id="lower-req">Строчные буквы</div>
+        <div class="requirement" id="number-req">Цифры</div>
+        <div class="requirement" id="special-req">Специальные символы</div>
+        <div class="requirement" id="common-req">Не в списке популярных</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="password-generator" aria-labelledby="generator-title">
+    <div class="section-title-wrapper">
+      <h2 id="generator-title">Генератор надежных паролей</h2>
+    </div>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem;">Создайте криптографически стойкий пароль за один клик</p>
+    <div class="password-generator">
+      <div class="generator-output">
+        <input type="text" id="generated-password" readonly aria-label="Сгенерированный пароль" placeholder="Нажмите 'Генерировать'">
+        <button class="btn-copy" id="btn-copy" type="button" aria-label="Копировать пароль">
+          <span class="icon" aria-hidden="true">📋</span> Копировать
+        </button>
+      </div>
+      <div class="generator-controls">
+        <div class="control-group">
+          <label for="password-length">Длина пароля: <span id="length-value">16</span></label>
+          <input type="range" id="password-length" min="8" max="64" value="16" step="1">
+        </div>
+        <div class="control-group">
+          <label for="password-type">Тип пароля</label>
+          <select id="password-type">
+            <option value="alphanumeric">Буквы + Цифры</option>
+            <option value="full" selected>Полный (спецсимволы)</option>
+            <option value="pronounceable">Произносимый</option>
+          </select>
+        </div>
+      </div>
+      <div class="checkbox-group">
+        <label class="checkbox-item">
+          <input type="checkbox" id="include-upper" checked>
+          Заглавные (A-Z)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="include-lower" checked>
+          Строчные (a-z)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="include-numbers" checked>
+          Цифры (0-9)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="include-special" checked>
+          Спецсимволы (!@#$)
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="exclude-ambiguous">
+          Без похожих (l, 1, I, O, 0)
+        </label>
+      </div>
+      <button class="btn-generate" id="btn-generate" type="button">
+        <span class="icon" aria-hidden="true">🔐</span> Сгенерировать пароль
+      </button>
+    </div>
+  </section>
+
+  <section id="link-checker" aria-labelledby="link-title">
+    <div class="section-title-wrapper">
+      <h2 id="link-title">Сканер ссылок</h2>
+    </div>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem;">Проверьте безопасность URL перед переходом</p>
+    <div class="link-checker">
+      <label for="link-input" class="sr-only">Введите URL для проверки</label>
+      <div class="link-input-container">
+        <input type="url" id="link-input" placeholder="https://example.com" aria-describedby="link-result">
+        <button id="check-link-btn" type="button">
+          <span class="icon" aria-hidden="true">🔍</span> Проверить
+        </button>
+      </div>
+      <div id="link-result" class="link-result" role="alert" aria-live="polite">
+        <div class="link-safety-level" id="safety-level">Ожидание проверки</div>
+        <div class="link-details">
+          <p id="link-domain">Домен: неизвестен</p>
+          <ul id="link-analysis">
+            <li>Введите URL и нажмите "Проверить"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="memo-section" aria-labelledby="memo-title">
+    <div class="section-title-wrapper">
+      <h2 id="memo-title">Предупрежден – значит вооружен</h2>
+    </div>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Памятка по цифровой гигиене.</p>
+    <div class="memo-grid">
+      <article class="memo-card">
+        <h3><span class="icon" aria-hidden="true">🔗</span> Фишинг-ссылки</h3>
+        <p>Всегда проверяй доменное имя перед кликом. Убедись, что ты на официальном сайте.</p>
+      </article>
+      <article class="memo-card">
+        <h3><span class="icon" aria-hidden="true">📥</span> Загрузка файлов</h3>
+        <p>Скачивай софт только с официальных сайтов. Проверяй расширение файла.</p>
+      </article>
+      <article class="memo-card">
+        <h3><span class="icon" aria-hidden="true">🔐</span> Личные данные</h3>
+        <p>Никогда не отправляй коды из СМС или почты третьим лицам.</p>
+      </article>
+      <article class="memo-card">
+        <h3><span class="icon" aria-hidden="true">🛡️</span> 2FA Защита</h3>
+        <p>Включи двухфакторную аутентификацию везде, где возможно.</p>
+      </article>
+      <article class="memo-card">
+        <h3><span class="icon" aria-hidden="true">🎣</span> Что такое фишинг?</h3>
+        <p>Фишинг — это вид интернет-мошенничества, при котором злоумышленники притворяются надёжными организациями, чтобы выманить ваши личные данные: пароли, номера карт, коды из СМС.</p>
+      </article>
+      <article class="memo-card">
+        <h3><span class="icon" aria-hidden="true">🔍</span> Как распознать фишинг?</h3>
+        <ul style="text-align: left; padding-left: 20px; margin: 10px 0; font-size: 0.95rem;">
+          <li>❗ Срочность: «Ваш аккаунт будет заблокирован через 2 часа!»</li>
+          <li>❗ Ошибки в тексте и странное оформление</li>
+          <li>❗ Подозрительный адрес: support@vk-security.ru вместо @vk.com</li>
+          <li>❗ Ссылки с опечатками: vk-login.ru, sberbank-secure.net</li>
+          <li>❗ Просьба перейти по ссылке и «подтвердить данные»</li>
+        </ul>
+      </article>
+      <article class="memo-card">
+        <h3><span class="icon" aria-hidden="true">📧</span> Виды фишинга</h3>
+        <ul style="text-align: left; padding-left: 20px; margin: 10px 0; font-size: 0.95rem;">
+          <li><strong>Email:</strong> Письма от «банка» или «соцсети»</li>
+          <li><strong>СМС (smishing):</strong> Сообщения «Получите приз!»</li>
+          <li><strong>Голосовой (vishing):</strong> Звонки от «службы безопасности»</li>
+          <li><strong>В соцсетях:</strong> Фейковые страницы и сообщения</li>
+          <li><strong>QR-фишинг:</strong> Коды, ведущие на поддельные сайты</li>
+        </ul>
+      </article>
+    </div>
+    <div class="cyber-tips" style="background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid rgba(0, 243, 255, 0.3); margin: 20px auto; max-width: 800px;">
+      <h4 style="color: var(--neon-blue); margin-top: 0; text-align: center;">💡 Кибер-лайфхаки</h4>
+      <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; margin: 0;">
+        <li style="margin: 5px 0;">🔹 <strong>Пароль:</strong> Используйте фразу: <code>Люблю_Космос2026!</code></li>
+        <li style="margin: 5px 0;">🔹 <strong>Ссылки:</strong> Наведите курсор, чтобы увидеть настоящий адрес</li>
+        <li style="margin: 5px 0;">🔹 <strong>Обновления:</strong> Не откладывайте — они закрывают уязвимости</li>
+        <li style="margin: 5px 0;">🔹 <strong>Публичный Wi-Fi:</strong> Не заходите в банк без VPN</li>
+        <li style="margin: 5px 0;">🔹 <strong>Резервные копии:</strong> Храните файлы в облаке и на диске</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="emergency-section" aria-labelledby="emergency-title">
+    <div class="section-title-wrapper">
+      <h2 id="emergency-title">🚨 Экстренные действия</h2>
+    </div>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Если вы стали жертвой кибератаки</p>
+
+    <div class="memo-grid">
+      <article class="memo-card" style="border-left-color: var(--neon-red);">
+        <h3><span class="icon" aria-hidden="true">🔐</span> Взломали аккаунт</h3>
+        <ol style="text-align: left; padding-left: 20px; margin: 0;">
+          <li>Немедленно смените пароль</li>
+          <li>Выйдите из всех сессий (настройки → безопасность)</li>
+          <li>Включите двухфакторную аутентификацию</li>
+          <li>Проверьте, не изменились ли контактные данные</li>
+          <li>Предупредите друзей о возможном мошенничестве</li>
+        </ol>
+      </article>
+
+      <article class="memo-card" style="border-left-color: var(--neon-red);">
+        <h3><span class="icon" aria-hidden="true">💳</span> Украли данные карты</h3>
+        <ol style="text-align: left; padding-left: 20px; margin: 0;">
+          <li>Заблокируйте карту через приложение банка</li>
+          <li>Позвоните на горячую линию банка</li>
+          <li>Напишите заявление в полицию</li>
+          <li>Сохраните все доказательства: скриншоты, переписку</li>
+          <li>Смените пароли в интернет-банке</li>
+        </ol>
+      </article>
+
+      <article class="memo-card" style="border-left-color: var(--neon-red);">
+        <h3><span class="icon" aria-hidden="true">😰</span> Шантаж в интернете</h3>
+        <ol style="text-align: left; padding-left: 20px; margin: 0;">
+          <li>Не отвечайте и не платите выкуп</li>
+          <li>Сохраните все доказательства: скриншоты, ссылки</li>
+          <li>Заблокируйте мошенника во всех мессенджерах</li>
+          <li>Обратитесь в полицию (можно онлайн через сайт МВД)</li>
+          <li>Расскажите родителям или доверенному взрослому</li>
+        </ol>
+      </article>
+    </div>
+  </section>
+
+  <section id="scammer-section" aria-labelledby="scammer-title">
+    <div class="section-title-wrapper">
+      <h2 id="scammer-title">Распознавание угроз</h2>
+    </div>
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">Классификация цифровых противников.</p>
+    <div class="scammer-types">
+      <article class="scammer-card">
+        <h3><span class="icon" aria-hidden="true">💸</span> Дропперы</h3>
+        <p>Люди, которые помогают выводить средства хакеров. Они получают комиссию за переводы.</p>
+        <div class="action-plan">
+          <strong>ПРОТОКОЛ:</strong>
+          <ul>
+            <li>Отклонить любое предложение</li>
+            <li>Не использовать услуги дропперов</li>
+            <li>Сообщить в правоохранительные органы</li>
+          </ul>
+        </div>
+      </article>
+      <article class="scammer-card">
+        <h3><span class="icon" aria-hidden="true">👹</span> Кибер-шантаж</h3>
+        <p>Угрожают опубликовать личные данные или компромат, если не заплатить выкуп.</p>
+        <div class="action-plan">
+          <strong>ПРОТОКОЛ:</strong>
+          <ul>
+            <li>Игнорировать угрозы</li>
+            <li>Сообщить в полицию</li>
+            <li>Не отвечать на сообщения</li>
+          </ul>
+        </div>
+      </article>
+      <article class="scammer-card">
+        <h3><span class="icon" aria-hidden="true">🎣</span> Фишеры</h3>
+        <p>Мошенники, выдающие себя за официальные организации для кражи логинов и паролей.</p>
+        <div class="action-plan">
+          <strong>ПРОТОКОЛ:</strong>
+          <ul>
+            <li>Не вводить данные на подозрительных сайтах</li>
+            <li>Проверять URL сайта</li>
+            <li>Обращаться напрямую в организацию</li>
+          </ul>
+        </div>
+      </article>
+      <article class="scammer-card">
+        <h3><span class="icon" aria-hidden="true">🎭</span> Социальная инженерия</h3>
+        <p>Манипуляции, при которых мошенники используют психологию, чтобы заставить вас добровольно выдать информацию или выполнить опасные действия.</p>
+        <div class="action-plan">
+          <strong>ПРОТОКОЛ:</strong>
+          <ul>
+            <li>Не доверяйте срочным просьбам от «начальства» в мессенджерах</li>
+            <li>Проверяйте личность собеседника через другой канал связи</li>
+            <li>Не сообщайте коды из СМС даже «сотрудникам банка»</li>
+          </ul>
+        </div>
+      </article>
+      <article class="scammer-card">
+        <h3><span class="icon" aria-hidden="true">💻</span> Вредоносное ПО</h3>
+        <p>Программы, которые крадут данные, шифруют файлы или используют ваш компьютер для атак. Часто распространяются через «бесплатные» программы и взломанные игры.</p>
+        <div class="action-plan">
+          <strong>ПРОТОКОЛ:</strong>
+          <ul>
+            <li>Скачивайте ПО только с официальных сайтов</li>
+            <li>Не отключайте антивирус и брандмауэр</li>
+            <li>Регулярно обновляйте систему и программы</li>
+            <li>Делайте резервные копии важных файлов</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 CyberGuard Platform. Безопасность — это привычка.</p>
+  </footer>
+
+  <div id="copy-notification" role="alert">✓ Пароль скопирован!</div>
+</body>
+
+</html>
