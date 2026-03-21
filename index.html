@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -48,14 +49,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                45deg,
-                rgba(0, 243, 255, 0.05) 0%,
-                rgba(204, 0, 255, 0.05) 25%,
-                rgba(0, 255, 170, 0.05) 50%,
-                rgba(0, 243, 255, 0.05) 75%,
-                rgba(204, 0, 255, 0.05) 100%
-            );
+            background: linear-gradient(45deg, rgba(0, 243, 255, 0.05) 0%, rgba(204, 0, 255, 0.05) 25%, rgba(0, 255, 170, 0.05) 50%, rgba(0, 243, 255, 0.05) 75%, rgba(204, 0, 255, 0.05) 100%);
             z-index: -2;
             animation: holographicShift 20s infinite alternate;
         }
@@ -84,13 +78,13 @@
             justify-content: center;
             padding: 0;
             margin: 0;
-            gap: 30px;
+            gap: 20px;
             flex-wrap: wrap;
         }
         nav a {
             color: var(--text-main);
             text-decoration: none;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             transition: 0.3s;
             padding: 8px 15px;
@@ -377,8 +371,6 @@
             border: 1px solid rgba(0, 243, 255, 0.3);
             display: none;
         }
-        
-        /* === СТИЛИ СЕРТИФИКАТА ДЛЯ PDF === */
         .certificate-template {
             background: #ffffff !important;
             color: #1e293b !important;
@@ -486,8 +478,6 @@
             background: #ffffff !important;
             text-align: center !important;
         }
-        
-        /* Tech стиль */
         .certificate-template.tech {
             background: linear-gradient(135deg, #0a0e17, #121928) !important;
             border-color: #00f3ff !important;
@@ -515,8 +505,6 @@
         .certificate-template.tech .certificate-details {
             background: rgba(0, 243, 255, 0.2);
         }
-        
-        /* Green стиль */
         .certificate-template.green {
             background: linear-gradient(135deg, #0a1e28, #0a0e17) !important;
             border-color: #00ffaa !important;
@@ -544,8 +532,6 @@
         .certificate-template.green .certificate-details {
             background: rgba(0, 255, 170, 0.2);
         }
-        
-        /* Purple стиль */
         .certificate-template.purple {
             background: linear-gradient(135deg, #1e1b4b, #0a0e17) !important;
             border-color: #cc00ff !important;
@@ -573,7 +559,6 @@
         .certificate-template.purple .certificate-details {
             background: rgba(204, 0, 255, 0.2);
         }
-        
         .btn-download {
             background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
             margin-top: 25px;
@@ -1027,9 +1012,228 @@
             justify-content: center;
             z-index: 1001;
         }
+        
+        /* === НОВЫЕ СТИЛИ ДЛЯ РАЗДЕЛА AI VS REAL === */
+        .video-challenge-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .video-challenge-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 243, 255, 0.05), rgba(204, 0, 255, 0.05));
+            z-index: -1;
+        }
+        .video-display {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        @media (max-width: 768px) {
+            .video-display {
+                grid-template-columns: 1fr;
+            }
+        }
+        .video-card {
+            background: rgba(18, 25, 40, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid rgba(100, 116, 139, 0.3);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        .video-card:hover {
+            border-color: var(--neon-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.3);
+        }
+        .video-card.selected {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.5);
+        }
+        .video-card.incorrect {
+            border-color: var(--neon-red);
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.5);
+        }
+        .video-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .video-thumbnail::before {
+            content: "▶";
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .video-thumbnail-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.8));
+        }
+        .video-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 243, 255, 0.2);
+            color: var(--neon-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+        .video-info {
+            padding: 15px;
+            text-align: center;
+        }
+        .video-info h4 {
+            color: var(--text-main);
+            margin: 0 0 10px;
+            font-size: 1.1rem;
+        }
+        .video-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        .video-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .btn-ai {
+            background: linear-gradient(90deg, var(--neon-purple), #9900cc);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: "Orbitron", sans-serif;
+        }
+        .btn-ai:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(204, 0, 255, 0.5);
+        }
+        .btn-real {
+            background: linear-gradient(90deg, var(--neon-green), #00cc88);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: "Orbitron", sans-serif;
+        }
+        .btn-real:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 170, 0.5);
+        }
+        .video-feedback {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .video-feedback.correct {
+            background: rgba(0, 255, 170, 0.2);
+            border: 2px solid var(--neon-green);
+            color: var(--neon-green);
+        }
+        .video-feedback.incorrect {
+            background: rgba(255, 0, 85, 0.2);
+            border: 2px solid var(--neon-red);
+            color: var(--neon-red);
+        }
+        .video-feedback h3 {
+            margin: 0 0 10px;
+            font-size: 1.5rem;
+        }
+        .video-feedback p {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+        .video-score {
+            text-align: center;
+            padding: 20px;
+            background: rgba(18, 25, 40, 0.7);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            margin-bottom: 20px;
+        }
+        .video-score h3 {
+            color: var(--neon-blue);
+            margin: 0 0 10px;
+        }
+        .video-score p {
+            color: var(--text-muted);
+            margin: 0;
+        }
+        #video-score-value {
+            color: var(--neon-green);
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .video-tips {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .video-tips h4 {
+            color: var(--neon-blue);
+            margin: 0 0 15px;
+            text-align: center;
+        }
+        .video-tips ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .video-tips li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: var(--text-muted);
+        }
+        .video-tips li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
         @media (max-width: 600px) {
             header h1 { font-size: 2.5rem; }
-            nav ul { gap: 15px; }
+            nav ul { gap: 10px; }
             .test-controls { flex-direction: column; }
             .btn { width: 100%; }
             .link-input-container { flex-direction: column; }
@@ -1039,6 +1243,8 @@
             .generator-output { flex-direction: column; }
             #generated-password { min-width: 100%; }
             .btn-copy { width: 100%; }
+            .video-controls { flex-direction: column; }
+            .btn-ai, .btn-real { width: 100%; }
         }
     </style>
 </head>
@@ -1050,6 +1256,7 @@
     <nav>
         <ul>
             <li><a href="#game-section">🎮 Тест</a></li>
+            <li><a href="#video-section">🎬 AI vs Real</a></li>
             <li><a href="#password-checker">🔐 Пароль</a></li>
             <li><a href="#password-generator">✨ Генератор</a></li>
             <li><a href="#link-checker">🔗 Ссылки</a></li>
@@ -1178,6 +1385,68 @@
                 </div>
                 
                 <button class="btn-restart" id="restart-test">🔄 Пройти тест заново</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- === НОВЫЙ РАЗДЕЛ: AI VS REAL VIDEO === -->
+    <section id="video-section">
+        <div class="section-title-wrapper">
+            <h2>🎬 AI vs Real: Распознай подделку</h2>
+        </div>
+        <p style="text-align: center; margin-bottom: 2rem; color: var(--text-muted);">Научись отличать видео, созданные нейросетью, от настоящих записей</p>
+        
+        <div class="video-challenge-container">
+            <div class="video-score">
+                <h3>📊 Ваш счёт</h3>
+                <p>Правильных ответов: <span id="video-score-value">0</span> из <span id="video-total">5</span></p>
+            </div>
+            
+            <div class="video-display" id="video-display">
+                <div class="video-card" data-video="0" onclick="selectVideo(0)">
+                    <div class="video-thumbnail">
+                        <div class="video-thumbnail-overlay"></div>
+                        <span class="video-label">Видео A</span>
+                    </div>
+                    <div class="video-info">
+                        <h4>Новостной репортаж</h4>
+                        <p>Длительность: 30 сек</p>
+                    </div>
+                </div>
+                <div class="video-card" data-video="1" onclick="selectVideo(1)">
+                    <div class="video-thumbnail">
+                        <div class="video-thumbnail-overlay"></div>
+                        <span class="video-label">Видео B</span>
+                    </div>
+                    <div class="video-info">
+                        <h4>Новостной репортаж</h4>
+                        <p>Длительность: 30 сек</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="video-feedback" id="video-feedback">
+                <h3 id="feedback-title">Правильно!</h3>
+                <p id="feedback-text">Это видео создано нейросетью</p>
+            </div>
+            
+            <div class="video-controls">
+                <button class="btn-ai" onclick="submitAnswer('ai')">🤖 Это AI</button>
+                <button class="btn-real" onclick="submitAnswer('real')">👤 Это реальное</button>
+            </div>
+            
+            <button class="btn btn-next" id="video-next-btn" onclick="nextVideo()" style="display: none; margin: 0 auto;">Следующее видео →</button>
+            
+            <div class="video-tips">
+                <h4>💡 Как распознать AI-видео?</h4>
+                <ul>
+                    <li>Неестественные движения губ и мимика</li>
+                    <li>Странные артефакты на границах объектов</li>
+                    <li>Несоответствие освещения и теней</li>
+                    <li>Размытые детали на руках и зубах</li>
+                    <li>Неестественное моргание или его отсутствие</li>
+                    <li>Искажения в фоновых объектах</li>
+                </ul>
             </div>
         </div>
     </section>
@@ -1355,6 +1624,172 @@
     </footer>
     
     <script>
+        // === ДАННЫЕ ДЛЯ ВИДЕО-ЧЕЛЛЕНДЖА ===
+        const videoChallenges = [
+            {
+                id: 0,
+                title: "Новостной репортаж",
+                aiVideo: 0, // 0 = Видео A is AI, 1 = Видео B is AI
+                description: "Один из этих репортажей создан нейросетью",
+                explanation: "AI-видео часто имеют неестественные движения губ, странные артефакты на границах объектов и несоответствие освещения."
+            },
+            {
+                id: 1,
+                title: "Интервью с экспертом",
+                aiVideo: 1,
+                description: "Одно из интервью сгенерировано ИИ",
+                explanation: "Обратите внимание на моргание - AI часто моргает неестественно или слишком редко."
+            },
+            {
+                id: 2,
+                title: "Презентация продукта",
+                aiVideo: 0,
+                description: "Одна презентация создана нейросетью",
+                explanation: "AI-видео могут иметь размытые детали на руках, зубах и фоновых объектах."
+            },
+            {
+                id: 3,
+                title: "Образовательный контент",
+                aiVideo: 1,
+                description: "Одно видео сгенерировано искусственным интеллектом",
+                explanation: "Проверьте соответствие теней и освещения - это частый признак AI-генерации."
+            },
+            {
+                id: 4,
+                title: "Социальные медиа",
+                aiVideo: 0,
+                description: "Один из постов создан нейросетью",
+                explanation: "AI часто создаёт неестественные движения и искажения в фоновых объектах."
+            }
+        ];
+        
+        let currentVideoIndex = 0;
+        let videoScore = 0;
+        let selectedVideoCard = null;
+        let videoAnswerSubmitted = false;
+        
+        // === ИНИЦИАЛИЗАЦИЯ ВИДЕО-ЧЕЛЛЕНДЖА ===
+        function initVideoChallenge() {
+            currentVideoIndex = 0;
+            videoScore = 0;
+            selectedVideoCard = null;
+            videoAnswerSubmitted = false;
+            updateVideoScore();
+            loadVideoChallenge();
+        }
+        
+        function updateVideoScore() {
+            document.getElementById("video-score-value").textContent = videoScore;
+            document.getElementById("video-total").textContent = videoChallenges.length;
+        }
+        
+        function loadVideoChallenge() {
+            const challenge = videoChallenges[currentVideoIndex];
+            const videoCards = document.querySelectorAll(".video-card");
+            
+            videoCards.forEach((card, index) => {
+                card.classList.remove("selected", "incorrect");
+                const label = card.querySelector(".video-label");
+                label.textContent = index === 0 ? "Видео A" : "Видео B";
+            });
+            
+            document.getElementById("video-feedback").style.display = "none";
+            document.getElementById("video-next-btn").style.display = "none";
+            selectedVideoCard = null;
+            videoAnswerSubmitted = false;
+        }
+        
+        function selectVideo(index) {
+            if (videoAnswerSubmitted) return;
+            
+            const videoCards = document.querySelectorAll(".video-card");
+            videoCards.forEach((card, i) => {
+                card.classList.remove("selected");
+                if (i === index) {
+                    card.classList.add("selected");
+                }
+            });
+            
+            selectedVideoCard = index;
+        }
+        
+        function submitAnswer(answer) {
+            if (videoAnswerSubmitted || selectedVideoCard === null) {
+                if (selectedVideoCard === null) {
+                    showNotification("Сначала выберите видео!", "error");
+                }
+                return;
+            }
+            
+            videoAnswerSubmitted = true;
+            const challenge = videoChallenges[currentVideoIndex];
+            const isCorrect = (answer === "ai" && selectedVideoCard === challenge.aiVideo) ||
+                             (answer === "real" && selectedVideoCard !== challenge.aiVideo);
+            
+            const feedbackEl = document.getElementById("video-feedback");
+            const feedbackTitle = document.getElementById("feedback-title");
+            const feedbackText = document.getElementById("feedback-text");
+            
+            const videoCards = document.querySelectorAll(".video-card");
+            
+            if (isCorrect) {
+                videoScore++;
+                feedbackEl.className = "video-feedback correct";
+                feedbackTitle.textContent = "✅ Правильно!";
+                feedbackText.textContent = challenge.explanation;
+                videoCards[selectedVideoCard].classList.add("selected");
+            } else {
+                feedbackEl.className = "video-feedback incorrect";
+                feedbackTitle.textContent = "❌ Неправильно!";
+                feedbackText.textContent = `Правильный ответ: Видео ${challenge.aiVideo === 0 ? "A" : "B"} создано нейросетью. ${challenge.explanation}`;
+                videoCards[selectedVideoCard].classList.add("incorrect");
+                videoCards[challenge.aiVideo].classList.add("selected");
+            }
+            
+            feedbackEl.style.display = "block";
+            updateVideoScore();
+            
+            if (currentVideoIndex < videoChallenges.length - 1) {
+                document.getElementById("video-next-btn").style.display = "block";
+            } else {
+                document.getElementById("video-next-btn").textContent = "🏆 Завершить";
+                document.getElementById("video-next-btn").style.display = "block";
+            }
+        }
+        
+        function nextVideo() {
+            if (currentVideoIndex < videoChallenges.length - 1) {
+                currentVideoIndex++;
+                loadVideoChallenge();
+            } else {
+                showVideoResults();
+            }
+        }
+        
+        function showVideoResults() {
+            const percentage = Math.round((videoScore / videoChallenges.length) * 100);
+            let message = "";
+            
+            if (percentage >= 80) {
+                message = "🏆 Отлично! Вы мастер распознавания AI-контента!";
+            } else if (percentage >= 60) {
+                message = "👍 Хорошо! Вы умеете отличать AI от реальности.";
+            } else if (percentage >= 40) {
+                message = "📚 Неплохо! Но стоит потренироваться ещё.";
+            } else {
+                message = "⚠️ Рекомендуем изучить признаки AI-видео внимательнее.";
+            }
+            
+            showNotification(`${message} Ваш счёт: ${videoScore}/${videoChallenges.length}`, "success");
+            
+            currentVideoIndex = 0;
+            videoScore = 0;
+            updateVideoScore();
+            loadVideoChallenge();
+            document.getElementById("video-next-btn").textContent = "Следующее видео →";
+        }
+        
+        // === СТАРЫЕ ДАННЫЕ И ФУНКЦИИ ===
         const cyberQuestions = [
             { question: "Что такое фишинг?", answers: ["Попытка мошенничества с целью получения конфиденциальной информации", "Разновидность вредоносного вируса", "Способ шифрования данных", "Тип сетевого протокола"], correct: 0, category: "Основы безопасности" },
             { question: "Какой пароль наиболее безопасен?", answers: ["123456", "password", "qwerty123", "G7$mK9@pL2!v"], correct: 3, category: "Парольная безопасность" },
@@ -1622,7 +2057,6 @@
             }
             
             try {
-                // Проверяем jsPDF
                 if (typeof window.jspdf === "undefined") {
                     showNotification("Загрузка библиотеки PDF...", "info");
                     const script = document.createElement("script");
@@ -1635,7 +2069,6 @@
                 
                 const { jsPDF } = window.jspdf;
                 
-                // Создаем контейнер для экспорта
                 const exportContainer = document.createElement("div");
                 exportContainer.style.position = "fixed";
                 exportContainer.style.top = "0";
@@ -1672,7 +2105,6 @@
                 
                 const imgData = canvas.toDataURL("image/png");
                 
-                // Создаем PDF (A4 ландшафтная ориентация)
                 const pdf = new jsPDF({
                     orientation: "landscape",
                     unit: "mm",
@@ -1682,10 +2114,8 @@
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = pdf.internal.pageSize.getHeight();
                 
-                // Добавляем изображение в PDF
                 pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
                 
-                // Сохраняем PDF
                 const nameEl = document.getElementById("user-name");
                 const surnameEl = document.getElementById("user-surname");
                 const fileName = `CyberGuard_Сертификат_${nameEl?.value || "user"}_${surnameEl?.value || ""}_${Date.now()}.pdf`;
@@ -1976,6 +2406,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             initTheme();
             initCyberTest();
+            initVideoChallenge();
             
             const passwordInput = document.getElementById("password-input");
             const togglePassword = document.getElementById("toggle-password");
@@ -2017,3 +2448,4 @@
     </script>
 </body>
 </html>
+```
