@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CyberGuard | Платформа Кибербезопасности</title>
+  
+  <!-- Подключение шрифтов -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ===== БАЗОВЫЕ СТИЛИ И ШРИФТЫ ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #f8f9fa;
+      --bg-secondary: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #4a4a6a;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+      --gold: #fbbf24;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f0f1a;
+      --bg-secondary: #1a1a2e;
+      --text-primary: #e6e6ff;
+      --text-secondary: #a0a0c0;
+      --border: #2a2a4a;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                   Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 0.5em;
+    }
+
+    p, li, span, label, input, button, select, textarea {
+      font-family: inherit;
+    }
+
+    code, pre, .mono, .tech-text {
+      font-family: 'Roboto Mono', 'Courier New', monospace;
+      font-size: 0.9em;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== УВЕДОМЛЕНИЕ О ДОСТИЖЕНИИ ===== */
+    #achievementNotification {
+      position: fixed;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 40px rgba(99, 102, 241, 0.4);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      max-width: 90%;
+      width: 400px;
+      animation: none;
+      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #achievementNotification.show {
+      top: 20px;
+      animation: pulse 0.5s ease-in-out;
+    }
+
+    #achievementNotification.hide {
+      top: -150px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.02); }
+    }
+
+    .achievement-icon {
+      font-size: 1.8rem;
+      animation: bounce 0.6s ease infinite alternate;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-5px); }
+    }
+
+    .achievement-content h4 {
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+    }
+
+    .achievement-content p {
+      font-size: 0.9rem;
+      opacity: 0.95;
+      margin: 0;
+    }
+
+    .achievement-close {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-left: auto;
+      padding: 0.25rem;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .achievement-close:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Эффект конфетти */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      animation: confetti-fall 3s ease-out forwards;
+      pointer-events: none;
+      z-index: 999;
+      border-radius: 2px;
+    }
+
+    @keyframes confetti-fall {
+      0% {
+        opacity: 1;
+        transform: translateY(-100vh) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(720deg);
+      }
+    }
+
+    /* ===== НАВИГАЦИЯ ===== */
+    header {
+      background: var(--bg-secondary);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--border);
+    }
+
+    /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    section {
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* ===== ТЕСТ ===== */
+    .quiz-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .quiz-question {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .quiz-options label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .quiz-options label:hover {
+      background: var(--border);
+    }
+
+    .quiz-controls {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--border);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: var(--text-secondary);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    .btn-success {
+      background: var(--success);
+    }
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .results {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    /* ===== СЕРТИФИКАТ ===== */
+    .certificate-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .certificate-form input,
+    .certificate-form select {
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .certificate-preview {
+      border: 3px dashed var(--accent);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+      margin: 1.5rem 0;
+    }
+
+    .certificate-preview h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .certificate-preview .name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 1rem 0;
+    }
+
+    .certificate-preview .result {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .certificate-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ===== AI vs REAL ===== */
+    .video-comparison {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .video-card {
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .video-card:hover,
+    .video-card.selected {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .video-card h4 {
+      margin: 0.5rem 0;
+    }
+
+    .video-meta {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .feedback {
+      text-align: center;
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin: 1rem 0;
+      font-weight: 500;
+    }
+
+    .feedback.correct {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .feedback.incorrect {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .ai-tips {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .ai-tips li {
+      list-style: none;
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    /* ===== ЛИЧНЫЙ КАБИНЕТ ===== */
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      font-weight: 600;
+    }
+
+    .user-info h3 {
+      margin-bottom: 0.25rem;
+    }
+
+    .user-info p {
+      color: var(--text-secondary);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+    }
+
+    .stat-card .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-card .label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .achievements-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    .achievements {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .achievement {
+      padding: 0.5rem 1rem;
+      background: var(--bg-primary);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 2px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .achievement.unlocked {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(251,191,36,0.05));
+      animation: unlockPulse 0.5s ease;
+    }
+
+    @keyframes unlockPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .achievement.locked {
+      opacity: 0.5;
+      filter: grayscale(0.8);
+    }
+
+    .achievement .icon {
+      font-size: 1.1rem;
+    }
+
+    /* ===== ФИШИНГ СИМУЛЯТОР ===== */
+    .email-simulator {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      background: var(--bg-primary);
+      margin: 1rem 0;
+    }
+
+    .email-header {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .email-header strong {
+      color: var(--text-secondary);
+    }
+
+    .email-body {
+      line-height: 1.8;
+      margin-bottom: 1rem;
+      white-space: pre-wrap;
+    }
+
+    .email-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .phishing-tips {
+      margin-top: 1.5rem;
+    }
+
+    .phishing-tips ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .phishing-tips li {
+      padding: 0.5rem 0.75rem;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    /* ===== ПРОВЕРКА УТЕЧЕК ===== */
+    .breach-checker {
+      text-align: center;
+    }
+
+    .breach-input {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 500px;
+      margin: 1rem auto;
+      flex-wrap: wrap;
+    }
+
+    .breach-input input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .breach-result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      display: none;
+    }
+
+    .breach-result.show {
+      display: block;
+    }
+
+    .breach-result.safe {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .breach-result.compromised {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .recommendations {
+      margin-top: 1.5rem;
+      text-align: left;
+    }
+
+    .recommendations ul {
+      list-style: none;
+      margin-top: 0.5rem;
+    }
+
+    .recommendations li {
+      padding: 0.4rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .recommendations li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .disclaimer {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===== СКАНЕР ФАЙЛОВ ===== */
+    .file-scanner {
+      text-align: center;
+    }
+
+    .drop-zone {
+      border: 3px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      margin: 1rem 0;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .drop-zone input[type="file"] {
+      display: none;
+    }
+
+    .file-info {
+      margin: 1rem 0;
+      padding: 1rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius);
+      display: none;
+    }
+
+    .file-info.show {
+      display: block;
+    }
+
+    .file-name {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .scan-result {
+      margin: 1rem 0;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      font-weight: 500;
+    }
+
+    .scan-result.safe {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .scan-result.threat {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .threat-types {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .threat-types span {
+      padding: 0.4rem 0.8rem;
+      background: var(--bg-primary);
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    /* ===== ФУТЕР ===== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    /* ===== АДАПТИВНОСТЬ ===== */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      nav {
+        justify-content: center;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      section {
+        padding: 1.5rem;
+      }
+
+      .certificate-form {
+        grid-template-columns: 1fr;
+      }
+
+      .email-header {
+        grid-template-columns: 1fr;
+      }
+
+      #achievementNotification {
+        width: 95%;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔔 УВЕДОМЛЕНИЕ О ДОСТИЖЕНИИ -->
+  <div id="achievementNotification">
+    <span class="achievement-icon">🏆</span>
+    <div class="achievement-content">
+      <h4 id="achievementTitle">Новое достижение!</h4>
+      <p id="achievementDesc">Вы получили награду</p>
+    </div>
+    <button class="achievement-close" id="achievementClose" aria-label="Закрыть">×</button>
+  </div>
+
+  <!-- Шапка с навигацией -->
+  <header>
+    <div class="logo">CyberGuard</div>
+    <nav>
+      <a href="#game-section">🎮 Тест</a>
+      <a href="#video-section">🎬 AI vs Real</a>
+      <a href="#password-checker">🔐 Пароль</a>
+      <a href="#password-generator">✨ Генератор</a>
+      <a href="#link-checker">🔗 Ссылки</a>
+      <a href="#memo-section">📚 Памятка</a>
+      <a href="#scammer-section">⚠️ Мошенники</a>
+      <a href="#dashboard-section">👤 Личный кабинет</a>
+      <a href="#phishing-simulator">📧 Фишинг</a>
+      <a href="#breach-checker">🔍 Утечки</a>
+      <a href="#file-scanner">📁 Сканер</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙</button>
+  </header>
+
+  <main>
+    <!-- Герой-секция -->
+    <section class="hero">
+      <h1>CyberGuard</h1>
+      <p>Твой щит в цифровом мире. Обучение, защита и безопасность.</p>
+    </section>
+
+    <!-- Тест по кибербезопасности -->
+    <section id="game-section">
+      <h2>🎮 Учение с увлечением</h2>
+      <p>Пройдите тест по кибербезопасности и получите персональный сертификат</p>
+      
+      <div class="quiz-container">
+        <div class="quiz-question" id="questionText">Загрузка вопросов...</div>
+        <div class="quiz-options" id="optionsContainer"></div>
+        <div class="quiz-controls">
+          <button class="btn btn-secondary" id="prevBtn" disabled>← Назад</button>
+          <button class="btn" id="nextBtn">Далее →</button>
+          <button class="btn" id="finishBtn" style="display:none;">✓ Завершить тест</button>
+        </div>
+      </div>
+
+      <div class="results" id="resultsSection" style="display:none;">
+        <h3>📊 Ваши результаты</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="scoreFill"></div>
+        </div>
+        <p id="scoreText">0%</p>
+        <p id="levelText">Начальный уровень</p>
+        <p id="detailsText">Детали: Правильных ответов: 0 из 14</p>
+        <p id="categoriesText">По категориям:</p>
+      </div>
+    </section>
+
+    <!-- Сертификат -->
+    <section id="certificate-section">
+      <h2>📜 Получите персональный сертификат</h2>
+      <p>Введите ваше имя и фамилию для получения официального сертификата</p>
+      
+      <div class="certificate-form">
+        <input type="text" id="certName" placeholder="Имя" />
+        <input type="text" id="certSurname" placeholder="Фамилия" />
+        <select id="certTheme">
+          <option value="classic">Классика</option>
+          <option value="tech">Техно</option>
+          <option value="green">Зеленый</option>
+          <option value="purple">Фиолетовый</option>
+        </select>
+        <button class="btn" id="generateCertBtn">📜 Сгенерировать сертификат</button>
+      </div>
+
+      <div class="certificate-preview" id="certPreview">
+        <h3>СЕРТИФИКАТ</h3>
+        <p>о прохождении курса по кибербезопасности</p>
+        <p>Настоящий сертификат подтверждает, что</p>
+        <p class="name" id="certFullName">Иван Иванов</p>
+        <p>успешно прошел тест по кибербезопасности на платформе CyberGuard</p>
+        <p>Результат: <span class="result" id="certScore">85%</span></p>
+        <p>Уровень знаний: <span id="certLevel">Продвинутый</span></p>
+        <p>Дата выдачи: <span id="certDate">19 февраля 2026 г.</span></p>
+        <p style="margin-top:2rem;"><em>Подпись инструктора</em><br>CyberGuard</p>
+      </div>
+
+      <div class="certificate-actions">
+        <button class="btn">📄 Скачать PDF</button>
+        <button class="btn btn-secondary" id="retakeBtn">🔄 Пройти тест заново</button>
+      </div>
+    </section>
+
+    <!-- AI vs Real -->
+    <section id="video-section">
+      <h2>🎬 AI vs Real: Распознай подделку</h2>
+      <p>Научись отличать видео, созданные нейросетью, от настоящих записей</p>
+      
+      <div class="stats">
+        <p>📊 Ваш счёт</p>
+        <p><strong>Правильных ответов: <span id="videoScore">0</span> из 5</strong></p>
+      </div>
+
+      <div class="video-comparison">
+        <div class="video-card" data-type="ai">
+          <h4>Видео A</h4>
+          <p class="video-meta">Новостной репортаж</p>
+          <p class="video-meta">Длительность: 30 сек</p>
+        </div>
+        <div class="video-card" data-type="real">
+          <h4>Видео B</h4>
+          <p class="video-meta">Новостной репортаж</p>
+          <p class="video-meta">Длительность: 30 сек</p>
+        </div>
+      </div>
+
+      <div class="feedback" id="videoFeedback" style="display:none;">
+        Правильно! Это видео создано нейросетью
+      </div>
+
+      <div class="video-actions">
+        <button class="btn" id="aiBtn">🤖 Это AI</button>
+        <button class="btn btn-secondary" id="realBtn">👤 Это реальное</button>
+        <button class="btn" id="nextVideoBtn" style="display:none;">Следующее видео →</button>
+      </div>
+
+      <div class="phishing-tips">
+        <h4>💡 Как распознать AI-видео?</h4>
+        <ul>
+          <li>Неестественные движения губ и мимика</li>
+          <li>Странные артефакты на границах объектов</li>
+          <li>Несоответствие освещения и теней</li>
+          <li>Размытые детали на руках и зубах</li>
+          <li>Неестественное моргание или его отсутствие</li>
+          <li>Искажения в фоновых объектах</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Личный кабинет -->
+    <section id="dashboard-section">
+      <h2>👤 Личный кабинет</h2>
+      
+      <div class="dashboard-header">
+        <div class="avatar" id="userAvatar">Г</div>
+        <div class="user-info">
+          <h3 id="userName">Гость</h3>
+          <p>Уровень: <span id="userLevel">Новичок</span></p>
+          <div class="progress-bar" style="width:200px;">
+            <div class="progress-fill" id="xpProgress" style="width:0%"></div>
+          </div>
+          <p style="font-size:0.9rem;color:var(--text-secondary);"><span id="userXP">0</span> / 1000 XP</p>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="value" id="testsPassed">0</div>
+          <div class="label">📊 Пройдено тестов</div>
+        </div>
+        <div class="stat-card">
+          <div class="value" id="achievementsCount">0</div>
+          <div class="label">🏆 Достижения</div>
+        </div>
+        <div class="stat-card">
+          <div class="value" id="avgScore">0%</div>
+          <div class="label">📈 Средний результат</div>
+        </div>
+        <div class="stat-card">
+          <div class="value" id="streakDays">0</div>
+          <div class="label">🔥 Дней подряд</div>
+        </div>
+      </div>
+
+      <div class="achievements-header">
+        <h4>🏅 Ваши достижения</h4>
+        <span style="font-size:0.9rem;color:var(--text-secondary);"><span id="unlockedCount">0</span>/6</span>
+      </div>
+      <div class="achievements" id="achievementsList">
+        <!-- Достижения будут добавлены через JS -->
+      </div>
+
+      <h4 style="margin-top:1.5rem;">📜 История активности</h4>
+      <p style="color:var(--text-secondary);" id="activityHistory">Пока нет записей</p>
+      
+      <button class="btn btn-secondary" id="clearDataBtn" style="margin-top:1rem;">🗑️ Очистить все данные</button>
+    </section>
+
+    <!-- Фишинг симулятор -->
+    <section id="phishing-simulator">
+      <h2>📧 Симулятор фишинга</h2>
+      <p>Научитесь распознавать фишинговые письма на практике</p>
+      
+      <div class="stats" style="margin:1rem 0;">
+        <strong>Счёт: <span id="phishScore">0</span></strong> | 
+        <strong>Уровень: <span id="phishLevel">1</span></strong>
+      </div>
+
+      <div class="email-simulator">
+        <div class="email-header">
+          <strong>От:</strong><span>support@bank-security.ru</span>
+          <strong>Кому:</strong><span>you@example.com</span>
+          <strong>Тема:</strong><span>Срочно! Подтвердите данные аккаунта</span>
+        </div>
+        <div class="email-body">Уважаемый клиент!
+
+Ваш аккаунт будет заблокирован через 2 часа, если вы не подтвердите свои данные.
+
+Нажмите на ссылку ниже для подтверждения:
+[🔗 Подтвердить аккаунт](#)
+
+С уважением,
+Служба безопасности</div>
+        <div class="email-actions">
+          <button class="btn btn-danger" id="phishingBtn">⚠️ Это фишинг</button>
+          <button class="btn btn-success" id="legitBtn">✅ Настоящее письмо</button>
+          <button class="btn" id="nextEmailBtn" style="display:none;">Следующее письмо →</button>
+        </div>
+      </div>
+
+      <div class="phishing-tips">
+        <h4>💡 Как распознать фишинг?</h4>
+        <ul>
+          <li>❗ Срочность и угрозы («аккаунт будет заблокирован»)</li>
+          <li>❗ Подозрительный адрес отправителя</li>
+          <li>❗ Ошибки в тексте и оформлении</li>
+          <li>❗ Ссылки ведут на странные домены</li>
+          <li>❗ Просьба ввести личные данные</li>
+          <li>❗ Неожиданные вложения</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Проверка утечек данных -->
+    <section id="breach-checker">
+      <h2>🔍 Проверка утечек данных</h2>
+      <p>Узнайте, не были ли ваши данные скомпрометированы в известных утечках</p>
+      
+      <div class="breach-checker">
+        <div class="breach-input">
+          <input type="email" id="emailInput" placeholder="Введите ваш email" />
+          <button class="btn" id="checkBreachBtn">🔍 Проверить</button>
+        </div>
+        <div class="breach-result" id="breachResult"></div>
+        
+        <div class="recommendations">
+          <p><strong>📋 Рекомендации:</strong></p>
+          <ul>
+            <li>Используйте уникальные пароли для каждого сервиса</li>
+            <li>Включите двухфакторную аутентификацию</li>
+            <li>Регулярно обновляйте пароли</li>
+            <li>Проверяйте настройки конфиденциальности</li>
+          </ul>
+        </div>
+        
+        <div class="disclaimer">
+          ⚠️ <strong>Важно:</strong> Этот инструмент использует симуляцию для демонстрации.
+        </div>
+      </div>
+    </section>
+
+    <!-- Сканер файлов -->
+    <section id="file-scanner">
+      <h2>📁 Сканер файлов</h2>
+      <p>Проверьте файлы на наличие угроз перед открытием</p>
+      
+      <div class="file-scanner">
+        <div class="drop-zone" id="dropZone">
+          <p>📤 Перетащите файл сюда или кликните для выбора</p>
+          <p style="color:var(--text-secondary);font-size:0.9rem;">Максимальный размер: 10 MB</p>
+          <input type="file" id="fileInput" />
+        </div>
+        <button class="btn btn-secondary" id="selectFileBtn">📂 Выбрать файл</button>
+        
+        <div class="file-info" id="fileInfo">
+          <p class="file-name" id="fileName">📄 filename.pdf</p>
+          <p>Размер: <span id="fileSize">2.4 MB</span></p>
+          <p>Статус: <span id="scanStatus">Анализ файла...</span></p>
+          <div class="scan-result safe" id="scanResult">✅ Безопасно</div>
+        </div>
+        
+        <div class="file-actions" style="margin-top:1rem;">
+          <button class="btn btn-success" id="openFileBtn">✅ Открыть файл</button>
+          <button class="btn btn-danger" id="deleteFileBtn">🗑️ Удалить файл</button>
+        </div>
+        
+        <div class="threat-types">
+          <span>🦠 Вирусы</span>
+          <span>🐴 Трояны</span>
+          <span>🔐 Шифровальщики</span>
+          <span>📧 Фишинг</span>
+          <span>👁️ Шпионское ПО</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Футер -->
+  <footer>
+    <p>© 2026 CyberGuard Platform. Безопасность — это привычка.</p>
+  </footer>
+
+  <!-- Скрипты -->
+  <script>
+    // ===== ДОСТИЖЕНИЯ: КОНФИГУРАЦИЯ =====
+    const ACHIEVEMENTS = {
+      first_step: { id: 'first_step', icon: '🌱', title: 'Первый шаг', desc: 'Пройдите первый тест', unlocked: false },
+      detective: { id: 'detective', icon: '🔍', title: 'Детектив', desc: 'Распознайте 3 фишинговых письма', unlocked: false },
+      protector: { id: 'protector', icon: '🛡️', title: 'Защитник', desc: 'Получите 80%+ в тесте', unlocked: false },
+      ai_master: { id: 'ai_master', icon: '🤖', title: 'AI-Эксперт', desc: 'Правильно определите 5 AI-видео', unlocked: false },
+      streak_3: { id: 'streak_3', icon: '🔥', title: 'Серия 3', desc: 'Заходите 3 дня подряд', unlocked: false },
+      perfectionist: { id: 'perfectionist', icon: '⭐', title: 'Перфекционист', desc: '100% в любом тесте', unlocked: false }
+    };
+
+    // ===== СОСТОЯНИЕ ПОЛЬЗОВАТЕЛЯ =====
+    let userState = {
+      name: 'Гость',
+      xp: 0,
+      level: 'Новичок',
+      testsPassed: 0,
+      achievements: {},
+      lastLogin: null,
+      streak: 0,
+      phishCorrect: 0,
+      videoCorrect: 0
+    };
+
+    // ===== ЗАГРУЗКА/СОХРАНЕНИЕ ДАННЫХ =====
+    function loadUserData() {
+      const saved = localStorage.getItem('cyberguard_user');
+      if (saved) {
+        userState = { ...userState, ...JSON.parse(saved) };
+        // Проверка серии дней
+        checkStreak();
+      }
+      updateProfileUI();
+      renderAchievements();
+    }
+
+    function saveUserData() {
+      localStorage.setItem('cyberguard_user', JSON.stringify(userState));
+    }
+
+    function checkStreak() {
+      const today = new Date().toDateString();
+      const last = userState.lastLogin;
+      if (last) {
+        const lastDate = new Date(last);
+        const diffDays = Math.floor((new Date(today) - lastDate) / (1000*60*60*24));
+        if (diffDays === 1) {
+          userState.streak++;
+          if (userState.streak >= 3 && !userState.achievements['streak_3']) {
+            unlockAchievement('streak_3');
+          }
+        } else if (diffDays > 1) {
+          userState.streak = 1;
+        }
+      } else {
+        userState.streak = 1;
+      }
+      userState.lastLogin = today;
+      saveUserData();
+    }
+
+    // ===== УВЕДОМЛЕНИЕ О ДОСТИЖЕНИИ =====
+    function showAchievementNotification(achievement) {
+      const notif = document.getElementById('achievementNotification');
+      document.getElementById('achievementTitle').textContent = `🏆 ${achievement.title}`;
+      document.getElementById('achievementDesc').textContent = achievement.desc;
+      
+      notif.classList.remove('hide');
+      notif.classList.add('show');
+      
+      // Конфетти-эффект
+      createConfetti();
+      
+      // Автоскрытие через 5 сек
+      setTimeout(() => hideAchievementNotification(), 5000);
+    }
+
+    function hideAchievementNotification() {
+      const notif = document.getElementById('achievementNotification');
+      notif.classList.remove('show');
+      notif.classList.add('hide');
+    }
+
+    function createConfetti() {
+      const colors = ['#fbbf24', '#6366f1', '#10b981', '#ef4444', '#f59e0b'];
+      for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+      }
+    }
+
+    // ===== РАЗБЛОКИРОВКА ДОСТИЖЕНИЯ =====
+    function unlockAchievement(achievementId) {
+      if (userState.achievements[achievementId]) return;
+      
+      const achievement = ACHIEVEMENTS[achievementId];
+      if (!achievement) return;
+      
+      userState.achievements[achievementId] = true;
+      userState.xp += 100;
+      updateLevel();
+      saveUserData();
+      
+      showAchievementNotification(achievement);
+      updateProfileUI();
+      renderAchievements();
+    }
+
+    function updateLevel() {
+      const xp = userState.xp;
+      if (xp >= 2000) userState.level = 'Легенда';
+      else if (xp >= 1000) userState.level = 'Эксперт';
+      else if (xp >= 500) userState.level = 'Продвинутый';
+      else if (xp >= 100) userState.level = 'Средний';
+      else userState.level = 'Новичок';
+    }
+
+    // ===== ОТРИСОВКА ДОСТИЖЕНИЙ В ПРОФИЛЕ =====
+    function renderAchievements() {
+      const container = document.getElementById('achievementsList');
+      container.innerHTML = '';
+      
+      Object.values(ACHIEVEMENTS).forEach(ach => {
+        const div = document.createElement('div');
+        div.className = `achievement ${userState.achievements[ach.id] ? 'unlocked' : 'locked'}`;
+        div.innerHTML = `<span class="icon">${ach.icon}</span> ${ach.title}`;
+        div.title = ach.desc + (userState.achievements[ach.id] ? ' ✅' : ' 🔒');
+        container.appendChild(div);
+      });
+      
+      const unlocked = Object.values(userState.achievements).filter(v => v).length;
+      document.getElementById('unlockedCount').textContent = unlocked;
+      document.getElementById('achievementsCount').textContent = unlocked;
+    }
+
+    // ===== ОБНОВЛЕНИЕ ПРОФИЛЯ =====
+    function updateProfileUI() {
+      document.getElementById('userName').textContent = userState.name;
+      document.getElementById('userXP').textContent = userState.xp;
+      document.getElementById('userLevel').textContent = userState.level;
+      document.getElementById('xpProgress').style.width = Math.min((userState.xp / 1000) * 100, 100) + '%';
+      document.getElementById('testsPassed').textContent = userState.testsPassed;
+      document.getElementById('streakDays').textContent = userState.streak;
+      
+      const avg = userState.testsPassed > 0 ? Math.round(85) : 0; // заглушка
+      document.getElementById('avgScore').textContent = avg + '%';
+    }
+
+    // ===== ПЕРЕДАЧА ИМЕНИ ИЗ СЕРТИФИКАТА В ПРОФИЛЬ =====
+    function updateUserNameFromCert() {
+      const name = document.getElementById('certName').value.trim();
+      const surname = document.getElementById('certSurname').value.trim();
+      if (name && surname) {
+        userState.name = `${name} ${surname}`;
+        document.getElementById('userName').textContent = userState.name;
+        document.getElementById('userAvatar').textContent = name[0]?.toUpperCase() || 'Г';
+        saveUserData();
+      }
+    }
+
+    // ===== ПРОВЕРКА ДОСТИЖЕНИЙ ПОСЛЕ ТЕСТА =====
+    function checkAchievementsAfterTest(score, correctCount) {
+      // Первый тест
+      if (!userState.achievements['first_step'] && userState.testsPassed === 0) {
+        unlockAchievement('first_step');
+      }
+      
+      // 80%+
+      if (score >= 80 && !userState.achievements['protector']) {
+        unlockAchievement('protector');
+      }
+      
+      // 100%
+      if (score === 100 && !userState.achievements['perfectionist']) {
+        unlockAchievement('perfectionist');
+      }
+      
+      userState.testsPassed++;
+      saveUserData();
+      updateProfileUI();
+    }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    document.addEventListener('DOMContentLoaded', () => {
+      loadUserData();
+      
+      // Переключение темы
+      const themeToggle = document.getElementById('themeToggle');
+      const html = document.documentElement;
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      html.setAttribute('data-theme', savedTheme);
+      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+      
+      themeToggle.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        themeToggle.textContent = next === 'dark' ? '☀️' : '🌙';
+      });
+      
+      // Закрытие уведомления о достижении
+      document.getElementById('achievementClose').addEventListener('click', hideAchievementNotification);
+      
+      // Генерация сертификата
+      document.getElementById('generateCertBtn').addEventListener('click', () => {
+        updateUserNameFromCert();
+        const name = document.getElementById('certName').value || 'Иван';
+        const surname = document.getElementById('certSurname').value || 'Иванов';
+        document.getElementById('certFullName').textContent = `${name} ${surname}`;
+        
+        const certPreview = document.getElementById('certPreview');
+        certPreview.style.opacity = '0.5';
+        setTimeout(() => { certPreview.style.opacity = '1'; }, 300);
+        
+        // Достижение за сертификат
+        if (!userState.achievements['first_step']) {
+          unlockAchievement('first_step');
+        }
+      });
+      
+      // Кнопка "Пройти тест заново" - симуляция завершения теста
+      document.getElementById('retakeBtn')?.addEventListener('click', () => {
+        // Симуляция: 90% результат
+        checkAchievementsAfterTest(90, 12);
+      });
+      
+      // Симуляция фишинг-достижения
+      document.getElementById('phishingBtn')?.addEventListener('click', () => {
+        userState.phishCorrect++;
+        if (userState.phishCorrect >= 3 && !userState.achievements['detective']) {
+          unlockAchievement('detective');
+        }
+        saveUserData();
+      });
+      
+      // Симуляция AI-видео достижения
+      document.getElementById('aiBtn')?.addEventListener('click', () => {
+        userState.videoCorrect++;
+        if (userState.videoCorrect >= 5 && !userState.achievements['ai_master']) {
+          unlockAchievement('ai_master');
+        }
+        saveUserData();
+      });
+      
+      // Очистка данных
+      document.getElementById('clearDataBtn')?.addEventListener('click', () => {
+        if (confirm('Удалить все данные профиля?')) {
+          localStorage.removeItem('cyberguard_user');
+          location.reload();
+        }
+      });
+      
+      // Плавная прокрутка
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    });
+
+    // ===== СКАНЕР ФАЙЛОВ =====
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const selectFileBtn = document.getElementById('selectFileBtn');
+    
+    if (selectFileBtn) {
+      selectFileBtn.addEventListener('click', () => fileInput.click());
+      dropZone?.addEventListener('click', () => fileInput.click());
+      
+      dropZone?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+      
+      dropZone?.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+      
+      dropZone?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length) handleFile(files[0]);
+      });
+      
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) handleFile(e.target.files[0]);
+      });
+    }
+    
+    function handleFile(file) {
+      document.getElementById('fileName').textContent = `📄 ${file.name}`;
+      document.getElementById('fileSize').textContent = formatFileSize(file.size);
+      document.getElementById('fileInfo').classList.add('show');
+      document.getElementById('scanStatus').textContent = 'Анализ файла...';
+      document.getElementById('scanResult').className = 'scan-result';
+      document.getElementById('scanResult').textContent = '⏳ Проверка...';
+      
+      setTimeout(() => {
+        document.getElementById('scanStatus').textContent = 'Завершено';
+        document.getElementById('scanResult').classList.add('safe');
+        document.getElementById('scanResult').textContent = '✅ Безопасно';
+      }, 2000);
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // ===== ПРОВЕРКА УТЕЧЕК =====
+    document.getElementById('checkBreachBtn')?.addEventListener('click', () => {
+      const email = document.getElementById('emailInput').value.trim();
+      const result = document.getElementById('breachResult');
+      
+      if (!email || !email.includes('@')) {
+        result.textContent = '⚠️ Пожалуйста, введите корректный email';
+        result.className = 'breach-result show compromised';
+        return;
+      }
+      
+      result.className = 'breach-result show';
+      result.textContent = '🔄 Проверка...';
+      
+      setTimeout(() => {
+        const isSafe = Math.random() > 0.3;
+        if (isSafe) {
+          result.className = 'breach-result show safe';
+          result.textContent = '✅ Ваш email не найден в известных утечках (демо-режим)';
+        } else {
+          result.className = 'breach-result show compromised';
+          result.textContent = '⚠️ Ваш email найден в 2 утечках. Рекомендуется сменить пароль!';
+        }
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
