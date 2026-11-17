@@ -1635,3 +1635,119 @@ async function initCyberGuardSupabase() {
 document.addEventListener('DOMContentLoaded', initCyberGuardSupabase);
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') syncCyberGuardProgress(); });
 window.addEventListener('pagehide', () => { if (cyberGuardUser) syncCyberGuardProgress(); });
+/*
+CYBER GUARD ANALYTICS PATCH
+Append this code to the VERY END of script(7).js (same script scope).
+The Supabase client is already initialized in that file as cyberGuardClient.
+This patch stores only a random session UUID, class level and answers.
+*/
+const CG_STATS = {
+  sessionId: null,
+  classLevel: null,
+  started: false,
+  sent: new Set()
+};
+
+function cgStatsUuid() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+  });
+}
+
+async function cgStatsStart(classLevel) {
+  if (!cyberGuardClient) {
+    showNotification('Статистика пока недоступна: нет соединения с сервером.');
+    return false;
+  }
+  CG_STATS.sessionId = cgStatsUuid();
+  CG_STATS.classLevel = String(classLevel);
+  const { error } = await cyberGuardClient.from('cg_stats_sessions').insert({
+    session_id: CG_STATS.sessionId,
+    class_level: CG_STATS.classLevel
+  });
+  if (error) {
+    console.error('CG stats session:', error);
+    showNotification('Не удалось начать запись статистики. Попробуй позже.');
+    return false;
+  }
+  CG_STATS.started = true;
+  return true;
+}
+
+async function cgStatsAnswer(activity, questionId, questionText, selectedOption, isCorrect) {
+  if (!CG_STATS.started || !cyberGuardClient) return;
+  const unique = `${activity}:${questionId}`;
+  if (CG_STATS.sent.has(unique)) return;
+  CG_STATS.sent.add(unique);
+  const { error } = await cyberGuardClient.from('cg_stats_answers').insert({
+    session_id: CG_STATS.sessionId,
+    activity,
+    question_id: String(questionId),
+    question_text: String(questionText).slice(0, 500),
+    selected_option: String(selectedOption).slice(0, 300),
+    is_correct: typeof isCorrect === 'boolean' ? isCorrect : null
+  });
+  if (error) {
+    CG_STATS.sent.delete(unique);
+    console.error('CG stats answer:', error);
+  }
+}
+
+/* Replace startQuiz() with this version, preserving the original quiz functions:
+   1) showPage('quiz') asks for class first;
+   2) class is selected before the first test question.
+*/
+const cgOriginalStartQuiz = startQuiz;
+startQuiz = function () {
+  quizStarted = true;
+  currentQ = 0;
+  quizAnswers = [];
+  quizPicked = [];
+  $('quizResult').style.display = 'none';
+  $('quizContent').style.display = 'block';
+  $('quizContent').innerHTML = `
+    <div class="quiz-question">
+      <h3>В каком вы классе?</h3>
+      <p>Выберите класс. Имя и другие личные данные не нужны.</p>
+      <div class="quiz-options">
+        ${Array.from({length:11}, (_,i) => `<button type="button" class="quiz-option" data-grade="${i+1}">${i+1} класс</button>`).join('')}
+        <button type="button" class="quiz-option" data-grade="other">Другое / не учусь в школе</button>
+      </div>
+    </div>`;
+  $('quizContent').querySelectorAll('[data-grade]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const ok = await cgStatsStart(btn.dataset.grade);
+      if (!ok) return;
+      cgOriginalStartQuiz();
+    }, { once: true });
+  });
+};
+
+/* Record each answer in the existing 15-question quiz. */
+const cgOriginalSelectAnswer = selectAnswer;
+selectAnswer = function (idx) {
+  const q = quizQuestions[currentQ];
+  cgStatsAnswer('quiz', `basic_${currentQ + 1}`, q.q, q.opts[idx], idx === q.correct);
+  return cgOriginalSelectAnswer(idx);
+};
+
+/* Existing activity answer handlers. */
+const cgOriginalPhishAnswer = phishAnswer;
+phishAnswer = function (choice) {
+  const q = phishingEmails[phIdx];
+  cgStatsAnswer('phishing', `phishing_${phIdx + 1}`,
+    `${q.fromName}: ${q.subject}`, choice ? 'Это фишинг' : 'Это настоящее',
+    choice === q.isPhishing);
+  return cgOriginalPhishAnswer(choice);
+};
+
+const cgOriginalThreatAnswer = threatAnswer;
+threatAnswer = function (choice) {
+  const q = THREATS[thIdx];
+  cgStatsAnswer('threats', `threat_${thIdx + 1}`,
+    `${q.src}: ${String(q.text).slice(0, 160)}`,
+    choice ? 'Серьёзная угроза' : 'Скорее блеф', choice === q.real);
+  return cgOriginalThreatAnswer(choice);
+};
